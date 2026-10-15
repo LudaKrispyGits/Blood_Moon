@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c42687e8a76397a4b89faa00e4485ade
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 364438
+  packageName: Tree Bark Material Pack
+  packageVersion: 1.0
+  assetPath: Assets/TreeBarkMaterialPack/HDRP/Materials/M_TreeBark_02.mat
+  uploadId: 870722
