@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1818518449344914563}
   - component: {fileID: 3609330682716071595}
+  - component: {fileID: -5646786430135467291}
   - component: {fileID: 8652111205267102833}
   - component: {fileID: 7374069118946514516}
   m_Layer: 0
@@ -43,6 +44,29 @@ Tree:
   m_GameObject: {fileID: 8568483264453797381}
   m_SpeedTreeWindAsset: {fileID: 0}
   m_TreeData: {fileID: 114130823760492458, guid: 6800c5970ca222d41bf66484fd4213f9, type: 3}
+--- !u!136 &-5646786430135467291
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8568483264453797381}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.51
+  m_Height: 38.6
+  m_Direction: 1
+  m_Center: {x: 0, y: 17.3, z: 0.12}
 --- !u!33 &8652111205267102833
 MeshFilter:
   m_ObjectHideFlags: 0

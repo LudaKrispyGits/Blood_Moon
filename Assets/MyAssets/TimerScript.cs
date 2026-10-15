@@ -40,4 +40,9 @@ public class TimerScript : MonoBehaviour
         timerText.color = Color.Lerp(startColor, endColor, t);
         timerText.fontSize = Mathf.Lerp(minFontSize, maxFontSize, t);
     }
+    public void RemoveTime(float seconds)
+{
+    if (finished) return;
+    time -= seconds;   
+}
 }
