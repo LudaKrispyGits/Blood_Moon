@@ -7,6 +7,7 @@ public class EnemyChase : MonoBehaviour
     public Transform player;                 // leave empty to auto-find by tag
     public string playerTag = "Player";
     public TimerScript timer;                // leave empty to auto-find
+    public GameOverManager gameOver;         // leave empty to auto-find
 
     [Header("Detection")]
     public float detectionRange = 15f;       // starts chasing inside this distance
@@ -22,6 +23,10 @@ public class EnemyChase : MonoBehaviour
     public float timePenalty = 10f;          // seconds removed from the timer
     public float hitCooldown = 2f;           // delay between hits
     public float pauseAfterHit = 0.75f;      // enemy freezes briefly after a hit
+
+    [Header("When Timer Hits 0")]
+    public float speedMultiplierAtZero = 2.5f;   // enemy speed gets multiplied by this
+    public bool alwaysChaseAtZero = false;       // true = hunts the player from anywhere
 
     private NavMeshAgent agent;
     private bool chasing;
@@ -39,6 +44,9 @@ public class EnemyChase : MonoBehaviour
         if (timer == null)
             timer = FindFirstObjectByType<TimerScript>();
 
+        if (gameOver == null)
+            gameOver = FindFirstObjectByType<GameOverManager>();
+
         if (useNavMesh)
         {
             agent = GetComponent<NavMeshAgent>();
@@ -50,11 +58,17 @@ public class EnemyChase : MonoBehaviour
     void Update()
     {
         if (player == null) return;
+        if (gameOver != null && gameOver.IsOver) return;   // stop everything on game over
+
+        bool doomsday = timer != null && timer.IsFinished;
+        float currentSpeed = doomsday ? moveSpeed * speedMultiplierAtZero : moveSpeed;
 
         float dist = Vector3.Distance(transform.position, player.position);
 
         // Start / stop chasing
-        if (!chasing && dist <= detectionRange)
+        if (doomsday && alwaysChaseAtZero)
+            chasing = true;
+        else if (!chasing && dist <= detectionRange)
             chasing = true;
         else if (chasing && loseRange > 0f && dist > loseRange)
             chasing = false;
@@ -65,29 +79,39 @@ public class EnemyChase : MonoBehaviour
             return;
         }
 
-        // Brief freeze after hitting the player
-        bool paused = Time.time < resumeTime;
+        // Brief freeze after hitting the player (skipped at 0, no mercy)
+        bool paused = !doomsday && Time.time < resumeTime;
 
         if (!paused)
-            MoveTowardPlayer();
+            MoveTowardPlayer(currentSpeed);
         else if (agent != null)
             agent.ResetPath();
 
         // Contact check
-        if (dist <= hitRange && Time.time >= nextHitTime)
+        if (dist <= hitRange)
         {
-            nextHitTime = Time.time + hitCooldown;
-            resumeTime = Time.time + pauseAfterHit;
+            if (doomsday)
+            {
+                // Timer is at 0: touching the player kills them
+                if (gameOver != null) gameOver.TriggerGameOver();
+                return;
+            }
 
-            if (timer != null) timer.RemoveTime(timePenalty);
+            if (Time.time >= nextHitTime)
+            {
+                nextHitTime = Time.time + hitCooldown;
+                resumeTime = Time.time + pauseAfterHit;
+
+                if (timer != null) timer.RemoveTime(timePenalty);
+            }
         }
     }
 
-    void MoveTowardPlayer()
+    void MoveTowardPlayer(float speed)
     {
         if (agent != null)
         {
-            agent.speed = moveSpeed;
+            agent.speed = speed;
             agent.SetDestination(player.position);
             return;
         }
@@ -98,7 +122,7 @@ public class EnemyChase : MonoBehaviour
 
         Quaternion look = Quaternion.LookRotation(dir);
         transform.rotation = Quaternion.Slerp(transform.rotation, look, turnSpeed * Time.deltaTime);
-        transform.position += dir.normalized * moveSpeed * Time.deltaTime;
+        transform.position += dir.normalized * speed * Time.deltaTime;
     }
 
     // Shows the ranges in the Scene view when the enemy is selected

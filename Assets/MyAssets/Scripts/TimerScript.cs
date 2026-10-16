@@ -1,8 +1,10 @@
 using UnityEngine;
 using TMPro;
 
+
 public class TimerScript : MonoBehaviour
 {
+    public bool IsFinished => finished;
     public float time = 300f;
     public TextMeshProUGUI timerText;
 
