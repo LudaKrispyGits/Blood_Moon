@@ -4,6 +4,9 @@ using TMPro;
 
 public class TimerScript : MonoBehaviour
 {
+    [Header("Hide at 0")]
+    public GameObject prompt;    // the "blood moon rising" text object
+
     public bool IsFinished => finished;
     public float time = 300f;
     public TextMeshProUGUI timerText;
@@ -32,6 +35,8 @@ public class TimerScript : MonoBehaviour
             timerText.text = "RUN";
             timerText.color = endColor;
             timerText.fontSize = maxFontSize;
+            
+            if (prompt != null) prompt.SetActive(false);   // hides the prompt
             return;
         }
 

@@ -75,6 +75,9 @@ namespace StarterAssets
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false;
 
+        // Set by StaminaSystem at runtime. Takes (sprintPressed, isMoving), returns whether sprint is allowed.
+        public System.Func<bool, bool, bool> SprintFilter;
+
         // cinemachine
         private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
@@ -213,8 +216,13 @@ namespace StarterAssets
 
         private void Move()
         {
-            // set target speed based on move speed, sprint speed and if sprint is pressed
-            float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+            // stamina (if present) decides whether sprint is allowed; unlimited once the timer hits 0
+            bool sprinting = _input.sprint;
+            if (SprintFilter != null)
+                sprinting = SprintFilter(_input.sprint, _input.move != Vector2.zero);
+
+            // set target speed based on move speed, sprint speed and if sprint is allowed
+            float targetSpeed = sprinting ? SprintSpeed : MoveSpeed;
 
             // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
