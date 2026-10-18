@@ -262,11 +262,11 @@ MonoBehaviour:
   timePenalty: 10
   hitCooldown: 3
   pauseAfterHit: 3
-  speedMultiplierAtZero: 1.8
+  speedMultiplierAtZero: 2.2
   alwaysChaseAtZero: 1
   weepingAngel: 1
   viewDistance: 55
-  screenMargin: 0.313
+  screenMargin: 0.211
   lineOfSightMask:
     serializedVersion: 2
     m_Bits: 4294967295
